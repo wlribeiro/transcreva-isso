@@ -41,9 +41,11 @@ def transcrever_video():
         text_output.insert("insert", f"Erro inesperado: {str(e)}")
 
 def copiar_texto():
-    texto = text_output.get("1.0", "end-1c")
-    root.clipboard_clear()
-    root.clipboard_append(texto)
+    texto = text_output.get("1.0", "end-1c")  
+    texto_com_prompt = f"Resuma essa transcrição pra mim:\n\n{texto}" 
+    root.clipboard_clear() 
+    root.clipboard_append(texto_com_prompt)  
+
 
 root = Tk()
 root.title("Transcrição de Vídeos do YouTube")
@@ -54,7 +56,6 @@ canvas.pack()
 
 entry_url = Entry(root, width=70)
 entry_url.place(x=20, y=20)
-
 
 btn_transcrever = Button(root, text="Obter Transcrição", command=transcrever_video)
 btn_transcrever.place(x=20, y=60)
