@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: transcribe-video-app
+    env: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "uvicorn app.main:app --host 0.0.0.0 --port 10000"
+    branches: 
+      - main  # Escolha o branch que será implantado
+    disk: 1 GB  # Caso o seu aplicativo precise de um disco maior, altere o valor
+    envVars:
+      - key: DATABASE_URL
+        value: <your-database-url-if-applicable>  # Adicione variáveis de ambiente, se necessário
+    autoDeploy: true
+
+    # Opcional: caso você tenha necessidades específicas de configuração do ambiente (como banco de dados, API keys etc.)
+    # environment:
+    #   - key: "SOME_KEY"
+    #     value: "secret_value"
+    
+  # Se você precisar de bancos de dados ou outros recursos, pode incluir outras configurações de serviços.
+  # Example of a database service (PostgreSQL, if applicable):
+  #  - type: database
+  #    name: transcribe-video-db
+  #    plan: free  # Escolha o plano necessário
