@@ -22,10 +22,13 @@ async def index():
         return HTMLResponse(content=html_content)
 
 
-@app.post("/transcribe")
+@app.post("/api/v1/transcribe")
 async def transcribe_video(video: VideoURL):
     url = video.url
 
     response = service.get_video_transcript(url)
 
     return JSONResponse(content={"transcript": response})
+
+
+

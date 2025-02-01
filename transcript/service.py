@@ -1,6 +1,6 @@
 from fastapi import HTTPException
-from pytube import exceptions
 from youtube_transcript_api import YouTubeTranscriptApi, NoTranscriptFound
+from pytube.exceptions import PytubeError, RegexMatchError, LiveStreamError
 
 
 def _get_video_id(url):
@@ -34,9 +34,18 @@ def get_video_transcript(url: str) -> str:
     except NoTranscriptFound:
         raise HTTPException(
             status_code=404,
-            detail=f"This video does not have a transcript available.\nID: {video_id}",
+            detail=f"Transcript not found for video.\nID: {video_id}",
         )
-    except exceptions.VideoError:
-        raise HTTPException(status_code=500, detail="Error accessing the video")
+    except PytubeError as e:
+        raise HTTPException(
+            status_code=500, detail=f"Error accessing the video: {str(e)}"
+        )
+    except RegexMatchError as e:
+        raise HTTPException(status_code=400, detail=f"URL error: {str(e)}")
+    except LiveStreamError as e:
+        raise HTTPException(
+            status_code=404,
+            detail="Error: The video is a live stream and does not have a transcript available.",
+        )
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Unexpected error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
