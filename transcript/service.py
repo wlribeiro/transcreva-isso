@@ -2,6 +2,13 @@ from fastapi import HTTPException
 from youtube_transcript_api import YouTubeTranscriptApi, NoTranscriptFound
 from pytube.exceptions import PytubeError, RegexMatchError, LiveStreamError
 
+from transcript.config import HTTP_PROXY, HTTPS_PROXY
+
+proxy = {
+    "http": HTTP_PROXY,
+    "https": HTTPS_PROXY,
+}
+
 
 def _get_video_id(url):
     if "youtu.be/" in url:
@@ -23,7 +30,7 @@ def get_video_transcript(url: str) -> str:
             )
 
         transcript = YouTubeTranscriptApi.get_transcript(
-            video_id, languages=["pt", "en"]
+            video_id, languages=["pt", "en"], proxies=proxy
         )
 
         output = ""
